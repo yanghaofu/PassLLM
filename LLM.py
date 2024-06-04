@@ -59,9 +59,10 @@ def check_password_strength(password):
     # 根据OpenAI的响应来确定密码强度和解释
     # 这里需要根据实际返回的内容来编写逻辑，以下是一个示例
     if "强" in response_message:  # 假设模型返回包含“强”字表示密码强
-        strength = 'strong'
+        strength = 5
+
     else:
-        strength = 'weak'
+        strength = 1
 
     return strength, response_message
 

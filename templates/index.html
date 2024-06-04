@@ -328,10 +328,14 @@
 
 <div class="container right-panel-active" style="padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
   <h3 style="font-size: 1.5em; color: #333; font-weight: bold;">口令强度输出</h3>
-  <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9;">
-    <span class="password-strength" style="width: 0%; background-color: #4caf50; transition: width 0.3s ease;"></span>
+  <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; position: relative;">
+    <!-- 强度条 -->
+    <div class="password-strength" style="height: 20px; background-color: #4caf50; transition: width 0.3s ease; position: absolute; top: 0; left: 0;"></div>
+    <!-- 强度数值，绝对定位在强度条上方 -->
+    <div class="strength-value" style="position: absolute; top: 5px; left: 5px; color: white; font-weight: bold; font-size: 14px;">0/5</div>
   </div>
-  <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9;"></textarea>
+  <!-- 密码强度解释文本，增加了高度和行数 -->
+  <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; height: 100px; resize: none;"></textarea>
 </div>
 
 <script>
@@ -350,25 +354,33 @@
       body: JSON.stringify({ password: password })
     })
     .then(response => response.json())
-    .then(data => {
+     .then(data => {
       // 使用从后端接收的数据来更新页面
       const passwordStrength = document.querySelector('.password-strength');
       const passwordExplanation = document.getElementById('password-explanation');
 
-      // 设置密码强度条的宽度
-      passwordStrength.style.width = '100%'; // 这里可以根据实际强度设置宽度百分比
+      // 根据返回的密码强度数值设置进度条的宽度百分比
+      const strengthPercentage = parseInt(data.strength); // 将字符串转换为整数
+      const widthPercentage = (strengthPercentage / 5) * 100; // 转换成百分比
+      passwordStrength.style.width = widthPercentage + '%'; // 设置宽度百分比
 
       // 显示解释文本
       passwordExplanation.value = data.explanation;
 
       // 根据密码强度设置文本区域和进度条的颜色
-      if (data.strength === 'strong') {
+      if (strengthPercentage >= 4) { // 如果强度是4或5
         passwordStrength.style.backgroundColor = '#4caf50'; // 绿色
         passwordExplanation.style.borderColor = '#4caf50';
-      } else if (data.strength === 'medium') {
+      } else if (strengthPercentage >= 3) { // 如果强度是3
+        passwordStrength.style.backgroundColor = '#ffeb3b'; // 黄色
+        passwordExplanation.style.borderColor = '#ffeb3b';
+      } else if (strengthPercentage >= 2) { // 如果强度是2
         passwordStrength.style.backgroundColor = '#ff9800'; // 橙色
         passwordExplanation.style.borderColor = '#ff9800';
-      } else {
+      } else if (strengthPercentage >= 1) { // 如果强度是1
+        passwordStrength.style.backgroundColor = '#ff5722'; // 较深的橙色
+        passwordExplanation.style.borderColor = '#ff5722';
+      } else { // 如果强度小于1（这在1-5的范围内不应该发生）
         passwordStrength.style.backgroundColor = '#f44336'; // 红色
         passwordExplanation.style.borderColor = '#f44336';
       }
