@@ -47,7 +47,7 @@ huggingface_hub.snapshot_download(
 
 相关库可详见requirements.txt文件
 
-### （4）web/backen中的代码文件说明
+### （4）web/backend中的代码文件说明
 
 - chat.py：运行基础模型
 
