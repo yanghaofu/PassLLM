@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- https://codepen.io/danielkvist/pen/LYNVyPL -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename = 'css/index.css') }}">
+  <title>Document</title>
+  <!-- Add some CSS for the new Answer Module -->
+
+  <style>
+    :root {
+      /* COLORS */
+      --white: #e9e9e9;
+      --gray: #333;
+      --blue: #0367a6;
+      --lightblue: #008997;
+
+      /* RADII */
+      --button-radius: 0.7rem;
+
+      /* SIZES */
+      --max-width: 758px;
+      --max-height: 420px;
+
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+
+    body {
+      align-items: center;
+      background-color: var(--white);
+      background: url("https://res.cloudinary.com/dbhnlktrv/image/upload/v1599997626/background_oeuhe7.jpg");
+      /* 决定背景图像的位置是在视口内固定，或者随着包含它的区块滚动。 */
+      /* https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-attachment */
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: grid;
+      height: 100vh;
+      place-items: center;
+    }
+
+    .form__title {
+      font-weight: 300;
+      margin: 0;
+      margin-bottom: 1.25rem;
+    }
+
+    .link {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin: 1.5rem 0;
+      text-decoration: none;
+    }
+
+    .container {
+      background-color: var(--white);
+      border-radius: var(--button-radius);
+      box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25),
+        0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
+      height: var(--max-height);
+      max-width: var(--max-width);
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+
+    .container__form {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      transition: all 0.6s ease-in-out;
+    }
+
+    .container--signin {
+      left: 0;
+      width: 50%;
+      z-index: 2;
+    }
+
+    .container.right-panel-active .container--signin {
+      transform: translateX(100%);
+    }
+
+    .container--signup {
+      left: 0;
+      opacity: 0;
+      width: 50%;
+      z-index: 1;
+    }
+
+    .container.right-panel-active .container--signup {
+      animation: show 0.6s;
+      opacity: 1;
+      transform: translateX(100%);
+      z-index: 5;
+      /* margin-left: 40%; */
+      /* margin-right: 90%; */
+    }
+/* 
+    .container__overlay {
+      height: 100%;
+      left: 50%;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      transition: transform 0.6s ease-in-out;
+      width: 50%;
+      z-index: 100;
+    } */
+
+    .container.right-panel-active .container__overlay {
+      transform: translateX(-100%);
+    }
+
+    .overlay {
+      background-color: var(--lightblue);
+      background: url("https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg");
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100%;
+      left: -100%;
+      position: relative;
+      transform: translateX(0);
+      transition: transform 0.6s ease-in-out;
+      width: 200%;
+    }
+
+    .container.right-panel-active .overlay {
+      transform: translateX(50%);
+    }
+
+    .overlay__panel {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      transform: translateX(0);
+      transition: transform 0.6s ease-in-out;
+      width: 50%;
+    }
+
+    .overlay--left {
+      transform: translateX(-20%);
+    }
+
+    .container.right-panel-active .overlay--left {
+      transform: translateX(0);
+    }
+
+    .overlay--right {
+      right: 0;
+      transform: translateX(0);
+    }
+
+    .container.right-panel-active .overlay--right {
+      transform: translateX(20%);
+    }
+
+    .btn {
+      background-color: var(--blue);
+      background-image: linear-gradient(90deg, var(--blue) 0%, var(--lightblue) 74%);
+      border-radius: 20px;
+      border: 1px solid var(--blue);
+      color: var(--white);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 0.1rem;
+      padding: 0.9rem 4rem;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+    }
+
+    .form>.btn {
+      margin-top: 1.5rem;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn:focus {
+      outline: none;
+    }
+
+    .form {
+      background-color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 3rem;
+      height: 100%;
+      text-align: center;
+    }
+
+      .answer-module {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: var(--white);
+    border-radius: var(--button-radius);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  }
+  .answer-module h3 {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .answer-textarea {
+    width: 100%;
+    margin-bottom: 1rem;
+    min-height: 100px; /* Adjust height as needed */
+    padding: 0.5rem;
+    border: 1px solid var(--gray);
+    border-radius: var(--button-radius);
+    resize: vertical; /* Allow resizing vertically */
+  }
+  .answer-btn {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+    .password-output-module {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: var(--white);
+    border-radius: var(--button-radius);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  }
+  .password-output-module h3 {
+    margin-bottom: 5rem;
+    text-align: center;
+  }
+  .password-strength-box {
+    width: 100%;
+    height: 20px; /* 可以根据需要调整高度 */
+    background-color: #ddd; /* 背景颜色，可以根据需要调整 */
+    border-radius: var(--button-radius);
+    margin-bottom: 1rem;
+    position: relative;
+    /* margin-left: 70%; */
+    margin-right: 10%;
+  }
+  .password-strength {
+    height: 100%;
+    background-color: #4caf50; /* 口令强度条的颜色，可以根据需要调整 */
+    border-radius: var(--button-radius);
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.3s ease; /* 平滑过渡效果 */
+  }
+  .password-explanation {
+    min-height: 100px; /* 根据需要调整高度 */
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid var(--gray);
+    border-radius: var(--button-radius);
+    resize: vertical;
+  }
+
+    .input {
+      background-color: #fff;
+      border: none;
+      padding: 0.9rem 0.9rem;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+
+    @keyframes show {
+
+      0%,
+      49.99% {
+        opacity: 0;
+        z-index: 1;
+      }
+
+      50%,
+      100% {
+        opacity: 1;
+        z-index: 5;
+      }
+    } 
+  </style>
+</head>
+
+<body>
+  <div class="container right-panel-active">
+    <!-- Sign Up -->
+    <div class="container__form container--signup">
+      <form action="#" class="form" id="form1">
+        <h2 class="form__title">包含个人信息</h2>
+        <input type="text" name="username" id="username" placeholder="User" class="input" />
+        <input type="email" name="email" placeholder="Email" class="input" />
+        <input type="brithday" name="brithday" id="password" placeholder="Brithday" class="input" />
+        <input type="password" name="password" placeholder="Password" class="input" />
+         <button class="btn" onclick="submitForm('register')">Submit</button>
+      </form>
+    </div>
+
+<div class="container right-panel-active" style="padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  <h3 style="font-size: 1.5em; color: #333; font-weight: bold;">口令强度输出</h3>
+  <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; position: relative;">
+    <!-- 强度条 -->
+    <div class="password-strength" style="height: 20px; background-color: #4caf50; transition: width 0.3s ease; position: absolute; top: 0; left: 0;"></div>
+    <!-- 强度数值，绝对定位在强度条上方 -->
+    <div class="strength-value" style="position: absolute; top: 5px; left: 5px; color: white; font-weight: bold; font-size: 14px;">0/5</div>
+  </div>
+  <!-- 密码强度解释文本，增加了高度和行数 -->
+  <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; height: 100px; resize: none;"></textarea>
+</div>
+
+<script>
+  // 假设这是在用户提交表单时触发的函数
+  function submitForm(action) {
+    // 获取密码输入框的值
+    const passwordInput = action === 'login' ? document.getElementById('password_sign') : document.getElementById('password');
+    const password = passwordInput.value;
+
+    // 发送密码到后端进行评估
+    fetch('/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password: password })
+    })
+    .then(response => response.json())
+     .then(data => {
+      // 使用从后端接收的数据来更新页面
+      const passwordStrength = document.querySelector('.password-strength');
+      const passwordExplanation = document.getElementById('password-explanation');
+
+      // 根据返回的密码强度数值设置进度条的宽度百分比
+      const strengthPercentage = parseInt(data.strength); // 将字符串转换为整数
+      const widthPercentage = (strengthPercentage / 5) * 100; // 转换成百分比
+      passwordStrength.style.width = widthPercentage + '%'; // 设置宽度百分比
+
+      // 显示解释文本
+      passwordExplanation.value = data.explanation;
+
+      // 根据密码强度设置文本区域和进度条的颜色
+      if (strengthPercentage >= 4) { // 如果强度是4或5
+        passwordStrength.style.backgroundColor = '#4caf50'; // 绿色
+        passwordExplanation.style.borderColor = '#4caf50';
+      } else if (strengthPercentage >= 3) { // 如果强度是3
+        passwordStrength.style.backgroundColor = '#ffeb3b'; // 黄色
+        passwordExplanation.style.borderColor = '#ffeb3b';
+      } else if (strengthPercentage >= 2) { // 如果强度是2
+        passwordStrength.style.backgroundColor = '#ff9800'; // 橙色
+        passwordExplanation.style.borderColor = '#ff9800';
+      } else if (strengthPercentage >= 1) { // 如果强度是1
+        passwordStrength.style.backgroundColor = '#ff5722'; // 较深的橙色
+        passwordExplanation.style.borderColor = '#ff5722';
+      } else { // 如果强度小于1（这在1-5的范围内不应该发生）
+        passwordStrength.style.backgroundColor = '#f44336'; // 红色
+        passwordExplanation.style.borderColor = '#f44336';
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+</script>
+
+  <script>
+    const signInBtn = document.getElementById("signIn");
+    const signUpBtn = document.getElementById("signUp");
+    const fistForm = document.getElementById("form1");
+    const secondForm = document.getElementById("form2");
+    const container = document.querySelector(".container");
+
+    signInBtn.addEventListener("click", () => {
+      container.classList.remove("right-panel-active");
+    });
+
+    signUpBtn.addEventListener("click", () => {
+      container.classList.add("right-panel-active");
+    });
+
+    fistForm.addEventListener("submit", (e) => e.preventDefault());
+    secondForm.addEventListener("submit", (e) => e.preventDefault());
+
+  </script>
+</body>
+
+</html>

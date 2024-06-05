@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename = 'css/index.css') }}"> -->
   <title>Document</title>
   <!-- Add some CSS for the new Answer Module -->
 
@@ -30,7 +31,8 @@
     body {
       align-items: center;
       background-color: var(--white);
-      background: url("https://res.cloudinary.com/dbhnlktrv/image/upload/v1599997626/background_oeuhe7.jpg");
+      /* background: url("https://res.cloudinary.com/dbhnlktrv/image/upload/v1599997626/background_oeuhe7.jpg"); */
+      background-color: #fff;
       /* 决定背景图像的位置是在视口内固定，或者随着包含它的区块滚动。 */
       /* https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-attachment */
       background-attachment: fixed;
@@ -46,6 +48,7 @@
       font-weight: 300;
       margin: 0;
       margin-bottom: 1.25rem;
+
     }
 
     .link {
@@ -74,94 +77,54 @@
       transition: all 0.6s ease-in-out;
     }
 
-    .container--signin {
-      left: 0;
-      width: 50%;
-      z-index: 2;
-    }
-
-    .container.right-panel-active .container--signin {
-      transform: translateX(100%);
-    }
 
     .container--signup {
-      left: 0;
+      /* left: 0;
       opacity: 0;
       width: 50%;
-      z-index: 1;
+      z-index: 1; */
     }
 
     .container.right-panel-active .container--signup {
-      animation: show 0.6s;
+      /* animation: show 0.6s;
       opacity: 1;
       transform: translateX(100%);
-      z-index: 5;
+      z-index: 5; */
     }
 
-    .container__overlay {
-      height: 100%;
-      left: 50%;
-      overflow: hidden;
-      position: absolute;
-      top: 0;
-      transition: transform 0.6s ease-in-out;
+
+    .container.right-panel-active .right-box{
       width: 50%;
-      z-index: 100;
+      margin-left:50%;
     }
 
-    .container.right-panel-active .container__overlay {
-      transform: translateX(-100%);
-    }
-
-    .overlay {
-      background-color: var(--lightblue);
-      background: url("https://cdn.pixabay.com/photo/2018/08/14/13/23/ocean-3605547_1280.jpg");
-      background-attachment: fixed;
-      background-position: center;
-      background-repeat: no-repeat;
+    .mylogo{
+      width: 90px;
+      height:102px;
+      background: url('../static/img/logo1.png');
       background-size: cover;
-      height: 100%;
-      left: -100%;
-      position: relative;
-      transform: translateX(0);
-      transition: transform 0.6s ease-in-out;
-      width: 200%;
-    }
-
-    .container.right-panel-active .overlay {
-      transform: translateX(50%);
-    }
-
-    .overlay__panel {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      justify-content: center;
+      margin-left: 20px;
+      margin-top: 20px;
       position: absolute;
-      text-align: center;
-      top: 0;
-      transform: translateX(0);
-      transition: transform 0.6s ease-in-out;
-      width: 50%;
+      /* z-index: 100; */
     }
 
-    .overlay--left {
-      transform: translateX(-20%);
+    .headline1{
+      font-size: 40px;
+      font-family: 'Courier New', Courier, monospace;
+      margin-top: 35px;
+      position: absolute;
+      margin-left: 115px;
     }
 
-    .container.right-panel-active .overlay--left {
-      transform: translateX(0);
+    .headline2{
+      margin-left: 110px;
+      margin-top: 90px;
+      font-size: 16px;
+      position: absolute;
+      font-family:cursive
     }
 
-    .overlay--right {
-      right: 0;
-      transform: translateX(0);
-    }
-
-    .container.right-panel-active .overlay--right {
-      transform: translateX(20%);
-    }
 
     .btn {
       background-color: var(--blue);
@@ -188,6 +151,11 @@
 
     .btn:focus {
       outline: none;
+    }
+
+    .btn-info{
+        /* background-color: steelblue;
+        border-color:darkcyan; */
     }
 
     .form {
@@ -237,16 +205,26 @@
     margin-bottom: 5rem;
     text-align: center;
   }
-  .password-strength-box {
-    width: 100%;
+
+  .rlogo{
+    width: 20px;
+    height: 20px;
+    position:absolute;
+    margin-right: 20px;
+    background: url('../static/img/lbx.png');
+    z-index: 1000;
+
+  }
+  .right-box .password-strength-box {
+    width: 50%;
     height: 20px; /* 可以根据需要调整高度 */
     background-color: #ddd; /* 背景颜色，可以根据需要调整 */
     border-radius: var(--button-radius);
     margin-bottom: 1rem;
     position: relative;
   }
-  .password-strength {
-    height: 100%;
+  .right-box .password-strength {
+    height: 50%;
     background-color: #4caf50; /* 口令强度条的颜色，可以根据需要调整 */
     border-radius: var(--button-radius);
     position: absolute;
@@ -254,15 +232,15 @@
     top: 0;
     transition: width 0.3s ease; /* 平滑过渡效果 */
   }
-  .password-explanation {
+  .right-box .password-explanation {
     min-height: 100px; /* 根据需要调整高度 */
     margin-bottom: 1rem;
     padding: 0.5rem;
     border: 1px solid var(--gray);
     border-radius: var(--button-radius);
     resize: vertical;
+    width: 80%;
   }
-
     .input {
       background-color: #fff;
       border: none;
@@ -284,63 +262,215 @@
         opacity: 1;
         z-index: 5;
       }
-    }
+    } 
+
+            /* 模态框的样式 */
+            .modal {
+            display: none; /* 隐藏模态框 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        /* 模态框内容 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+          /* 表单和图像容器 */
+                .form-container {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        /* 表单部分 */
+        .form-container form {
+            flex: 1;
+        }
+
+        /* 图像部分 */
+        .form-container .image-container {
+            flex: 1;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 200px; /* 调整高度以适应图像 */
+            margin-left: 20px; /* 图像与表单之间的间距 */
+        }
+
+        /* 关闭按钮 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
   </style>
 </head>
 
 <body>
   <div class="container right-panel-active">
+    <!-- <div>hhhhhh</div> -->
+    <!-- <div class = "left-block"> -->
     <!-- Sign Up -->
-    <div class="container__form container--signup">
-      <form action="#" class="form" id="form1">
-        <h2 class="form__title">包含个人信息</h2>
-        <input type="text" name="username" id="username" placeholder="User" class="input" />
-        <input type="email" name="email" placeholder="Email" class="input" />
-        <input type="brithday" name="brithday" id="password" placeholder="Brithday" class="input" />
-        <input type="password" name="password" placeholder="Password" class="input" />
-         <button class="btn" onclick="submitForm('register')">Submit</button>
-      </form>
-    </div>
+      <div class="container__form container--signup">
+        <div class="mylogo" style="display: inline-block;"></div>
+        <div class="headline1" style="display: inline-block;"><b>PassLLM</b></div>
+        <div class="headline2" style="display: inline-block;">一个基于LLM的口令强度评价与解释器</div>
+        <form action="#" class="form" id="form1">
+          <h2 class="form__title">
+          </h2>
+          <div style="height: 80px;"></div>
+          <span>在下方输入您的口令</span>
+          <!-- <input type="text" name="username" id="username" placeholder="User" class="input" />
+          <input type="email" name="email" placeholder="Email" class="input" />
+          <input type="brithday" name="brithday" id="password" placeholder="Brithday" class="input" /> -->
+          <input type="password" name="password" placeholder="Password" class="input" />
+          <!-- <button class= "btn-info"style="margin-left: 49%;">提供更多信息</button> -->
+          <!-- <div style="width: 50px;background: url('../static/img/header.png');">hhhh</div> -->
+          <button class="btn" onclick="submitForm('register')" id="testtest">Submit</button>
+        </form>
+      </div>
+    <!-- </div> -->
 
-    <!-- Sign In -->
-    <div class="container__form container--signin">
-      <form action="#" class="form" id="form2">
-        <h2 class="form__title">不包含个人信息</h2>
-<!--        <input type="text" name="username" id="username_sign" placeholder="User" class="input" />-->
-        <input type="password" name="password" id="password_sign" placeholder="Password" class="input" />
-        <a href="#" class="link">Forgot your password?</a>
-        <button class="btn" onclick="submitForm('login')">Submit</button>
-      </form>
-    </div>
 
-    <!-- Overlay -->
-    <div class="container__overlay">
-      <div class="overlay">
-        <div class="overlay__panel overlay--left">
-          <button class="btn" id="signIn">不包含个人信息</button>
-        </div>
-        <div class="overlay__panel overlay--right">
-          <button class="btn" id="signUp">包含个人信息</button>
+            <!-- 模态框 -->
+    <div id="myModal" class="modal">
+      <div class="modal-content" style="background-color:cadetblue;">
+        <!-- <div class="modal-content" style="background:url('../static/img/test3.png');background-size: cover;"> -->
+
+          <span class="close">&times;</span>
+          <div id="modal-content-container">
+              <!-- 初始内容：确认是否输入个人信息 -->
+              <!-- <h2>提供更多自己的信息？</h2> -->
+
+              <button id="yes-button">是</button>
+              <button id="no-button">否</button>
+          </div>
+      </div>
+  </div>
+
+
+      <div class="right-box">
+      <h3 style="font-size: 1.5em; color: #333; font-weight: bold;">口令强度评判结果：</h3>
+      <div style="height: 50px;"></div>
+      <!-- <h style="font-size: 50px;position:absolute;right: 250px;top:55px;color:slategrey">较弱</h> -->
+      <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; position: relative;">
+       
+        <!-- 强度条 -->
+        <div class="password-strength" style="height: 40px;  transition: width 0.3s ease; position: absolute; top: 0; left: 0;
+        "></div>
+        <!-- 强度数值，绝对定位在强度条上方 -->
+        <div class="strength-value" style="display: inline-block;position: absolute; top: 5px; left: 5px; color: white; font-weight: bold; font-size: 20px;">
+          <div style="color: #0367a6;">0/5</div>
         </div>
       </div>
-    </div>
-  </div>
+      <div style="display: inline-block;position: absolute;right: 80px;font-size: 18px;top: 140px;font-family:'Times New Roman', Times, serif;">强度等级</div>
 
-<div class="container right-panel-active" style="padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-  <h3 style="font-size: 1.5em; color: #333; font-weight: bold;">口令强度输出</h3>
-  <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; position: relative;">
-    <!-- 强度条 -->
-    <div class="password-strength" style="height: 20px; background-color: #4caf50; transition: width 0.3s ease; position: absolute; top: 0; left: 0;"></div>
-    <!-- 强度数值，绝对定位在强度条上方 -->
-    <div class="strength-value" style="position: absolute; top: 5px; left: 5px; color: white; font-weight: bold; font-size: 14px;">0/5</div>
-  </div>
-  <!-- 密码强度解释文本，增加了高度和行数 -->
-  <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; height: 100px; resize: none;"></textarea>
-</div>
+      <!-- 密码强度解释文本，增加了高度和行数 -->
+      <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; height: 165px; resize: none;
+      "></textarea>
+    </div></div>
 
+
+
+    <script>
+      
+                // 获取模态框
+                var modal = document.getElementById('myModal');
+
+                // 获取按钮
+                var btn = document.getElementById('testtest');
+
+                // 获取 <span> 元素，用于关闭模态框
+                var span = document.getElementsByClassName('close')[0];
+
+                // 获取模态框内容容器
+                var contentContainer = document.getElementById('modal-content-container');
+
+                // 点击按钮打开确认框
+                btn.onclick = function() {
+                    modal.style.display = 'block';
+                    showConfirmation();
+                }
+
+                // 显示确认框内容
+                function showConfirmation() {
+                    contentContainer.innerHTML = `
+                        <h2>提供更多信息？</h2>
+                        <h4>（这将有助于更全面地评估您的口令）</h4>
+                        <button id="no-button">不了，谢谢</button>
+                        <button id="yes-button">我愿意提供更多信息</button>
+                    `;
+
+                    // 添加事件监听器
+                    document.getElementById('yes-button').onclick = showForm;
+                    document.getElementById('no-button').onclick = function() {
+                        modal.style.display = 'none';
+                    }
+                }
+
+                // 显示表单内容
+                function showForm() {
+                    contentContainer.innerHTML = `
+                        <h2>输入个人信息</h2>
+                        <form>
+                            <label for="name">姓名:</label><br>
+                            <input type="text" id="name" name="name"><br><br>
+                            <label for="email">电子邮件:</label><br>
+                            <input type="email" id="email" name="email"><br><br>
+                            <label for="phone">电话:</label><br>
+                            <input type="tel" id="phone" name="phone"><br><br>
+                            <label for="phone">生日:</label><br>
+                            <input type="tel" id="phone" name="phone"><br><br>
+                            <input type="submit" value="提交">
+                        </form>                  
+                    `;
+                }
+
+                // 点击 <span> 元素关闭模态框
+                span.onclick = function() {
+                    modal.style.display = 'none';
+                }
+
+                // 在用户点击模态框内容之外的地方时关闭模态框
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
+                }
+
+
+    </script>
 <script>
   // 假设这是在用户提交表单时触发的函数
   function submitForm(action) {
+    // 弹窗处理
+    // alert('这是一个弹框！');
+
+
+
+
+
     // 获取密码输入框的值
     const passwordInput = action === 'login' ? document.getElementById('password_sign') : document.getElementById('password');
     const password = passwordInput.value;
