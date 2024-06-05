@@ -45,7 +45,6 @@ huggingface_hub.snapshot_download(
 - trl
 - datasets
 
-相关库可详见requirements.txt文件
 
 ### （4）web/backend中的代码文件说明
 
