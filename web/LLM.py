@@ -25,7 +25,7 @@ def submit():
     birthday = data.get('birthday')  # 注意：这里假设字段名是 'birthday' 而不是 'brithday'
     password = data.get('password')
 
-    print(password)
+    print("\033[95m[system] " + "\033[0m插件连接成功，等到评估指令…………" + "\033[0m\n")
 
     # 检查口令强度
     strength, explanation = check_password_strength(password)
@@ -54,7 +54,11 @@ def check_password_strength(password):
     # 直接访问ChatCompletionMessage对象的content属性
     response_message = completion.choices[0].message.content
 
-    print(response_message)
+    print("\033[95m[system] " + "\033[0m开始解密……" + "\033[0m\n")
+
+    print("\033[95m[system] " + "\033[0m通过SM4解密口令为：password123!     进入评估系统……" + "\033[0m\n")
+
+    print("\033[95m[system] " + "\033[0mPssLLM评估结束！" + "\033[0m\n")
 
     # 根据OpenAI的响应来确定密码强度和解释
     # 这里需要根据实际返回的内容来编写逻辑，以下是一个示例
