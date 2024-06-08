@@ -1,5 +1,4 @@
 from sklearn.metrics import cohen_kappa_score, f1_score, precision_score, recall_score
-import numpy as np
 
 
 def evaluate_password_strength(model_predictions, true_labels):
