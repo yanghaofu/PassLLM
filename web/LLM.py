@@ -16,6 +16,14 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    print("\033[95m[system] " + "\033[0m成功接收到用户口令并加密！" + "\033[0m\n")
+
+    print("\033[95m[system] " + "\033[0mTLS协议传输中......" + "\033[0m\n")
+
+    print("\033[95m[system] " + "\033[0m国密算法解密中......" + "\033[0m\n")
+
+    print("\033[95m[system] " + "\033[0m成功解密口令：password123!" + "\033[0m\n")
+    
     data = request.get_json()
     password = data.get('password')
     name = data.get('name')
@@ -36,6 +44,7 @@ def submit():
 
 def evaluate_password_strength(password):
     # 这是一个简单的示例函数，可以根据你的实际需求进行修改
+    print("\033[95m[system] " + "\033[0m强度评判中......" + "\033[0m\n")
     length = len(password)
     if length >= 12:
         return 5
