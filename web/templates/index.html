@@ -416,9 +416,11 @@
                         <input type="tel" id="phone" name="phone"><br><br>
                         <label for="birthday">生日:</label><br>
                         <input type="date" id="birthday" name="birthday"><br><br>
-                        <button type="button" onclick="submitFormWithAdditionalInfo()">提交</button>
+                        <button type="button" id="submit-additional-info">提交</button>
                     </form>
                 `;
+
+                document.getElementById('submit-additional-info').onclick = submitFormWithAdditionalInfo;
             }
 
             function submitForm() {
@@ -500,9 +502,7 @@
                 }
             }
         });
-    </script>
 
-    <script>
         const signInBtn = document.getElementById("signIn");
         const signUpBtn = document.getElementById("signUp");
         const fistForm = document.getElementById("form1");
