@@ -1,49 +1,39 @@
-import pandas as pd
-from sklearn.metrics import cohen_kappa_score, f1_score, precision_score, recall_score
+import re
 
 
-def evaluate_password_strength(model_predictions, true_labels):
-    """
-    评估大模型的口令强度评估准确性和一致性。
+def parse_password_data(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
 
-    :param model_predictions: 大模型对口令强度的评估结果
-    :param true_labels: 口令模型的真实强度标签
-    :return: kappa系数和F1-score
-    """
-    # 计算Kappa系数
-    kappa = cohen_kappa_score(true_labels, model_predictions)
+    # 定义正则表达式以匹配密码和其强度原因
+    pattern = re.compile(r'(\w+)\s这个密码的强度较高，主要原因如下：\n(.*?)\n\n', re.DOTALL)
+    matches = pattern.findall(content)
 
-    # 计算F1-score
-    f1 = f1_score(true_labels, model_predictions, average='weighted')
+    password_data = []
+    for match in matches:
+        password, reasons = match
+        reasons_list = [reason.strip() for reason in reasons.split('\n') if reason]
+        password_data.append({'password': password, 'reasons': reasons_list})
 
-    # 计算精确率和召回率
-    precision = precision_score(true_labels, model_predictions, average='weighted')
-    recall = recall_score(true_labels, model_predictions, average='weighted')
-
-    return kappa, f1, precision, recall
+    return password_data
 
 
-def main():
-    # 读取LLM.csv和LLM_updated.csv文件
-    llm_file_path = 'dataset/LLM.csv'
-    llm_updated_file_path = 'dataset/LLM_updated.csv'
-
-    llm_df = pd.read_csv(llm_file_path)
-    llm_updated_df = pd.read_csv(llm_updated_file_path)
-
-    # 提取分数列
-    true_labels = llm_df['Score']
-    model_predictions = llm_updated_df['Score']
-
-    # 调用evaluate_password_strength函数
-    kappa, f1, precision, recall = evaluate_password_strength(model_predictions, true_labels)
-
-    # 打印评估结果
-    print(f"Kappa coefficient: {kappa:.2f}")
-    print(f"F1-score: {f1:.2f}")
-    print(f"Precision: {precision:.2f}")
-    print(f"Recall: {recall:.2f}")
+def print_password_data(password_data):
+    for entry in password_data:
+        print(f"Password: {entry['password']}")
+        print("Reasons:")
+        for reason in entry['reasons']:
+            print(f"  - {reason}")
+        print()
 
 
-if __name__ == "__main__":
-    main()
+# 读取和解析文件内容
+standard_data = parse_password_data('standard_result.txt')
+llm_data = parse_password_data('LLM_result.txt')
+
+# 打印解析结果
+print("Standard Result:")
+print_password_data(standard_data)
+
+print("LLM Result:")
+print_password_data(llm_data)
