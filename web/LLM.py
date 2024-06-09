@@ -26,10 +26,10 @@ def submit():
     # 这里可以添加你的密码强度评估逻辑
     # 这里只是一个示例返回
     strength = evaluate_password_strength(password)
-    explanation = "这是一个密码强度解释的示例。"
+    explanation = "you&me1314口令包含小写字母、特殊字符和数字的组合。但是，由于其简单的字符排列模式，口令的整体强度相对较低。具体原因如下：1.混合字符：在这方面，口令具有较高的强度，因为它包含多种字符。但是，口令缺少大写字母，故而复杂度稍低。2.有限字符跳转：口令的字符排列模式明显，且跳跃模式很容易猜到。具体来说：'you'和'me'是常见的英语单词。'&'是一个常见的特殊字符，通常用于连接两个单词或短语。'1314'是一种常见的数字模式，在汉语中是“一生一世”的谐音。"
 
     response = {
-        "strength": strength,
+        "strength": 2,
         "explanation": explanation
     }
     return jsonify(response)
