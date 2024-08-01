@@ -28,7 +28,9 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+
     global flag
+
     data = request.get_json()
     password = data.get('password', '')
 
