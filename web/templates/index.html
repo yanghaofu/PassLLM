@@ -330,30 +330,30 @@
 <body>
   <div class="container right-panel-active">
     <div class="container__form container--signup">
-        <div class="mylogo" style="display: inline-block;"></div>
-        <div class="headline1" style="display: inline-block;"><b>PassLLM</b></div>
-        <div class="headline2" style="display: inline-block;">一个基于LLM的口令强度评价与解释器</div>
-        <form action="#" class="form" id="form1">
-            <h2 class="form__title"></h2>
-            <div style="height: 80px;"></div>
-            <span>在下方输入您的口令</span>
-            <input type="password" name="password" id="password" placeholder="Password" class="input" />
-            <button class="btn" id="testtest">Submit</button>
-        </form>
+      <div class="mylogo" style="display: inline-block;"></div>
+      <div class="headline1" style="display: inline-block;"><b>PassLLM</b></div>
+      <div class="headline2" style="display: inline-block;">一个基于LLM的口令强度评价与解释器</div>
+      <form action="#" class="form" id="form1">
+        <h2 class="form__title"></h2>
+        <div style="height: 80px;"></div>
+        <span>在下方输入您的口令</span>
+        <input type="password" name="password" id="password" placeholder="Password" class="input" />
+        <button class="btn" id="testtest">Submit</button>
+      </form>
     </div>
 
     <!-- 模态框 -->
     <div id="myModal" class="modal">
       <div class="modal-content" style="background-color:cadetblue;">
-          <span class="close">&times;</span>
-          <div id="modal-content-container">
-              <button id="yes-button">是</button>
-              <button id="no-button">否</button>
-          </div>
+        <span class="close">&times;</span>
+        <div id="modal-content-container">
+          <button id="yes-button">是</button>
+          <button id="no-button">否</button>
+        </div>
       </div>
-  </div>
+    </div>
 
-      <div class="right-box">
+    <div class="right-box">
       <h3 style="font-size: 1.5em; color: #333; font-weight: bold;">口令强度评判结果：</h3>
       <div style="height: 50px;"></div>
       <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; position: relative;">
@@ -364,161 +364,163 @@
       </div>
       <div style="display: inline-block;position: absolute;right: 80px;font-size: 18px;top: 140px;font-family:'Times New Roman', Times, serif;">强度等级</div>
       <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; height: 165px; resize: none;"></textarea>
-    </div></div>
+    </div>
+  </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var modal = document.getElementById('myModal');
-            var btn = document.getElementById('testtest');
-            var span = document.getElementsByClassName('close')[0];
-            var contentContainer = document.getElementById('modal-content-container');
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var modal = document.getElementById('myModal');
+      var btn = document.getElementById('testtest');
+      var span = document.getElementsByClassName('close')[0];
+      var contentContainer = document.getElementById('modal-content-container');
 
-            btn.onclick = function(event) {
-                event.preventDefault();
-                modal.style.display = 'block';
-                showConfirmation();
-            }
+      btn.onclick = function(event) {
+        event.preventDefault();
+        modal.style.display = 'block';
+        showConfirmation();
+      }
 
-            span.onclick = function() {
-                modal.style.display = 'none';
-            }
+      span.onclick = function() {
+        modal.style.display = 'none';
+      }
 
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            }
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
 
-            function showConfirmation() {
-                contentContainer.innerHTML = `
-                    <h2>提供更多信息？</h2>
-                    <h4>（这将有助于更全面地评估您的口令）</h4>
-                    <button id="no-button">不了，谢谢</button>
-                    <button id="yes-button">我愿意提供更多信息</button>
-                `;
+      function showConfirmation() {
+        contentContainer.innerHTML = `
+          <h2>提供更多信息？</h2>
+          <h4>（这将有助于更全面地评估您的口令）</h4>
+          <button id="no-button">不了，谢谢</button>
+          <button id="yes-button">我愿意提供更多信息</button>
+        `;
 
-                document.getElementById('yes-button').onclick = showForm;
-                document.getElementById('no-button').onclick = function() {
-                    modal.style.display = 'none';
-                    submitForm();
-                }
-            }
+        document.getElementById('yes-button').onclick = showForm;
+        document.getElementById('no-button').onclick = function() {
+          modal.style.display = 'none';
+          submitForm();
+        }
+      }
 
-            function showForm() {
-                contentContainer.innerHTML = `
-                    <h2>输入个人信息</h2>
-                    <form id="additional-info-form">
-                        <label for="name">姓名:</label><br>
-                        <input type="text" id="name" name="name"><br><br>
-                        <label for="email">电子邮件:</label><br>
-                        <input type="email" id="email" name="email"><br><br>
-                        <label for="phone">电话:</label><br>
-                        <input type="tel" id="phone" name="phone"><br><br>
-                        <label for="birthday">生日:</label><br>
-                        <input type="date" id="birthday" name="birthday"><br><br>
-                        <button type="button" id="submit-additional-info">提交</button>
-                    </form>
-                `;
+      function showForm() {
+        contentContainer.innerHTML = `
+          <h2>输入个人信息</h2>
+          <form id="additional-info-form">
+            <label for="name">姓名:</label><br>
+            <input type="text" id="name" name="name"><br><br>
+            <label for="email">电子邮件:</label><br>
+            <input type="email" id="email" name="email"><br><br>
+            <label for="phone">电话:</label><br>
+            <input type="tel" id="phone" name="phone"><br><br>
+            <label for="birthday">生日:</label><br>
+            <input type="date" id="birthday" name="birthday"><br><br>
+            <button type="button" id="submit-additional-info">提交</button>
+          </form>
+        `;
 
-                document.getElementById('submit-additional-info').onclick = submitFormWithAdditionalInfo;
-            }
+        document.getElementById('submit-additional-info').onclick = submitFormWithAdditionalInfo;
+      }
 
-            function submitForm() {
-                const passwordInput = document.getElementById('password');
-                const password = passwordInput.value;
+      function submitForm() {
+        const passwordInput = document.getElementById('password');
+        const password = passwordInput.value;
 
-                fetch('/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ password: password })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    updateResults(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-
-            function submitFormWithAdditionalInfo() {
-                const passwordInput = document.getElementById('password');
-                const password = passwordInput.value;
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
-                const birthday = document.getElementById('birthday').value;
-
-                fetch('/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        password: password,
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        birthday: birthday
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    modal.style.display = 'none';
-                    updateResults(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-
-            function updateResults(data) {
-                const passwordStrength = document.querySelector('.password-strength');
-                const strengthDisplay = document.getElementById('strength-display');
-                const passwordExplanation = document.getElementById('password-explanation');
-                const strengthPercentage = parseInt(data.strength);
-                const widthPercentage = (strengthPercentage / 5) * 100;
-                passwordStrength.style.width = widthPercentage + '%';
-                passwordExplanation.value = data.explanation;
-                strengthDisplay.textContent = `${strengthPercentage}/5`;
-
-                if (strengthPercentage >= 4) {
-                    passwordStrength.style.backgroundColor = '#4caf50';
-                    passwordExplanation.style.borderColor = '#4caf50';
-                } else if (strengthPercentage >= 3) {
-                    passwordStrength.style.backgroundColor = '#ffeb3b';
-                    passwordExplanation.style.borderColor = '#ffeb3b';
-                } else if (strengthPercentage >= 2) {
-                    passwordStrength.style.backgroundColor = '#ff9800';
-                    passwordExplanation.style.borderColor = '#ff9800';
-                } else if (strengthPercentage >= 1) {
-                    passwordStrength.style.backgroundColor = '#ff5722';
-                    passwordExplanation.style.borderColor = '#ff5722';
-                } else {
-                    passwordStrength.style.backgroundColor = '#f44336';
-                    passwordExplanation.style.borderColor = '#f44336';
-                }
-            }
+        fetch('https://127.0.0.1:5000/submit', { // 修改为使用 HTTPS
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password: password })
+        })
+        .then(response => response.json())
+        .then(data => {
+          updateResults(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
         });
+      }
 
-        const signInBtn = document.getElementById("signIn");
-        const signUpBtn = document.getElementById("signUp");
-        const fistForm = document.getElementById("form1");
-        const secondForm = document.getElementById("form2");
-        const container = document.querySelector(".container");
+      function submitFormWithAdditionalInfo() {
+        const passwordInput = document.getElementById('password');
+        const password = passwordInput.value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const birthday = document.getElementById('birthday').value;
 
-        signInBtn.addEventListener("click", () => {
-            container.classList.remove("right-panel-active");
+        fetch('https://127.0.0.1:5000/submit', { // 修改为使用 HTTPS
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            password: password,
+            name: name,
+            email: email,
+            phone: phone,
+            birthday: birthday
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          modal.style.display = 'none';
+          updateResults(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
         });
+      }
 
-        signUpBtn.addEventListener("click", () => {
-            container.classList.add("right-panel-active");
-        });
+      function updateResults(data) {
+        const passwordStrength = document.querySelector('.password-strength');
+        const strengthDisplay = document.getElementById('strength-display');
+        const passwordExplanation = document.getElementById('password-explanation');
+        const strengthPercentage = parseInt(data.strength);
+        const widthPercentage = (strengthPercentage / 5) * 100;
+        passwordStrength.style.width = widthPercentage + '%';
+        passwordExplanation.value = data.explanation;
+        strengthDisplay.textContent = `${strengthPercentage}/5`;
 
-        fistForm.addEventListener("submit", (e) => e.preventDefault());
-        secondForm.addEventListener("submit", (e) => e.preventDefault());
-    </script>
+        if (strengthPercentage >= 4) {
+          passwordStrength.style.backgroundColor = '#4caf50';
+          passwordExplanation.style.borderColor = '#4caf50';
+        } else if (strengthPercentage >= 3) {
+          passwordStrength.style.backgroundColor = '#ffeb3b';
+          passwordExplanation.style.borderColor = '#ffeb3b';
+        } else if (strengthPercentage >= 2) {
+          passwordStrength.style.backgroundColor = '#ff9800';
+          passwordExplanation.style.borderColor = '#ff9800';
+        } else if (strengthPercentage >= 1) {
+          passwordStrength.style.backgroundColor = '#ff5722';
+          passwordExplanation.style.borderColor = '#ff5722';
+        } else {
+          passwordStrength.style.backgroundColor = '#f44336';
+          passwordExplanation.style.borderColor = '#f44336';
+        }
+      }
+    });
+
+    const signInBtn = document.getElementById("signIn");
+    const signUpBtn = document.getElementById("signUp");
+    const fistForm = document.getElementById("form1");
+    const secondForm = document.getElementById("form2");
+    const container = document.querySelector(".container");
+
+    signInBtn.addEventListener("click", () => {
+      container.classList.remove("right-panel-active");
+    });
+
+    signUpBtn.addEventListener("click", () => {
+      container.classList.add("right-panel-active");
+    });
+
+    fistForm.addEventListener("submit", (e) => e.preventDefault());
+    secondForm.addEventListener("submit", (e) => e.preventDefault());
+  </script>
 </body>
 </html>
+

@@ -1,13 +1,13 @@
 from flask import request, Flask, render_template, jsonify
+from flask_sslify import SSLify
 import sys
-
 from openai import OpenAI
 
 # 请替换成你的OpenAI API密钥
 api_key = "sk-Z6ttNnGzWksu7LYIOVVNuvXi3GqD5g6rykmK7NAn7ZcqTP7Q"
 
 client = OpenAI(
-    api_key="sk-Z6ttNnGzWksu7LYIOVVNuvXi3GqD5g6rykmK7NAn7ZcqTP7Q",
+    api_key=api_key,
     base_url="https://api.moonshot.cn/v1",
 )
 
@@ -18,7 +18,7 @@ if sys.getdefaultencoding() != 'utf-8':
     sys.setdefaultencoding('utf-8')
 
 app = Flask(__name__)
-
+sslify = SSLify(app)
 
 flag = 0
 
@@ -28,7 +28,6 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-
     global flag
 
     data = request.get_json()
@@ -106,4 +105,5 @@ def extract_explanation_from_analysis(analysis):
     return analysis
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    context = ('cert.pem', 'key.pem')  # 替换成你的证书和密钥文件路径
+    app.run(debug=True, ssl_context=context)
