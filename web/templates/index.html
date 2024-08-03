@@ -327,6 +327,14 @@
   </style>
 </head>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PassLLM</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
 <body>
   <div class="container right-panel-active">
     <div class="container__form container--signup">
@@ -401,7 +409,7 @@
         document.getElementById('yes-button').onclick = showForm;
         document.getElementById('no-button').onclick = function() {
           modal.style.display = 'none';
-          submitForm();
+          submitForm(false);
         }
       }
 
@@ -421,49 +429,37 @@
           </form>
         `;
 
-        document.getElementById('submit-additional-info').onclick = submitFormWithAdditionalInfo;
+        document.getElementById('submit-additional-info').onclick = function() {
+          submitForm(true);
+        };
       }
 
-      function submitForm() {
+      function submitForm(withAdditionalInfo) {
         const passwordInput = document.getElementById('password');
         const password = passwordInput.value;
 
-        fetch('https://127.0.0.1:5000/submit', { // 修改为使用 HTTPS
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ password: password })
-        })
-        .then(response => response.json())
-        .then(data => {
-          updateResults(data);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-      }
+        let body = { password: password };
 
-      function submitFormWithAdditionalInfo() {
-        const passwordInput = document.getElementById('password');
-        const password = passwordInput.value;
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const birthday = document.getElementById('birthday').value;
-
-        fetch('https://127.0.0.1:5000/submit', { // 修改为使用 HTTPS
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        if (withAdditionalInfo) {
+          const name = document.getElementById('name').value;
+          const email = document.getElementById('email').value;
+          const phone = document.getElementById('phone').value;
+          const birthday = document.getElementById('birthday').value;
+          body = {
             password: password,
             name: name,
             email: email,
             phone: phone,
             birthday: birthday
-          })
+          };
+        }
+
+        fetch('http://127.0.0.1:5000/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body)
         })
         .then(response => response.json())
         .then(data => {
@@ -485,16 +481,16 @@
         passwordExplanation.value = data.explanation;
         strengthDisplay.textContent = `${strengthPercentage}/5`;
 
-        if (strengthPercentage >= 4) {
+        if (strengthPercentage > 4) {
           passwordStrength.style.backgroundColor = '#4caf50';
           passwordExplanation.style.borderColor = '#4caf50';
-        } else if (strengthPercentage >= 3) {
+        } else if (strengthPercentage > 3) {
           passwordStrength.style.backgroundColor = '#ffeb3b';
           passwordExplanation.style.borderColor = '#ffeb3b';
-        } else if (strengthPercentage >= 2) {
+        } else if (strengthPercentage > 2) {
           passwordStrength.style.backgroundColor = '#ff9800';
           passwordExplanation.style.borderColor = '#ff9800';
-        } else if (strengthPercentage >= 1) {
+        } else if (strengthPercentage > 1) {
           passwordStrength.style.backgroundColor = '#ff5722';
           passwordExplanation.style.borderColor = '#ff5722';
         } else {
@@ -523,4 +519,5 @@
   </script>
 </body>
 </html>
+
 

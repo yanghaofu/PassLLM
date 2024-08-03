@@ -18,7 +18,7 @@ if sys.getdefaultencoding() != 'utf-8':
     sys.setdefaultencoding('utf-8')
 
 app = Flask(__name__)
-sslify = SSLify(app)
+# sslify = SSLify(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -29,41 +29,66 @@ def submit():
     data = request.get_json()
     password = data.get('password', '')
 
+    if not password:
+        return jsonify({"error": "Password is required"}), 400
     print(password)
 
-    strength, explanation = evaluate_password_strength(password)
+    name = data.get('name', '')
+    email = data.get('email', '')
+    phone = data.get('phone', '')
+    birthday = data.get('birthday', '')
+
+    print(name, email, phone, birthday)
+
+
+    strength, explanation = evaluate_password_strength(password, name, email, phone, birthday)
 
     response = {
         "strength": strength,
         "explanation": explanation
     }
 
+    print(strength)
+
     return jsonify(response)
 
-def evaluate_password_strength(password):
+def evaluate_password_strength(password, name, email, phone, birthday):
     try:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "你是 Kimi，由 Moonshot AI 提供的人工智能助手，你更擅长中文和英文的对话。"
+                    "你会为用户提供安全，有帮助，准确的回答。同时，你会拒绝一切涉及恐怖主义，"
+                    "种族歧视，黄色暴力等问题的回答。Moonshot AI 为专有名词，不可翻译成其他语言。"
+                )
+            },
+            {
+                "role": "user",
+                "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），并解释为什么它强或弱：\n\n密码: {password}"
+            },
+        ]
+
+        if name or email or phone or birthday:
+            additional_info = (
+                f"\n\n附加信息：\n姓名: {name}\n电子邮件: {email}\n电话: {phone}\n生日: {birthday}"
+            )
+            messages.append({
+                "role": "user",
+                "content": additional_info
+            })
+
         completion = client.chat.completions.create(
             model="moonshot-v1-8k",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "你是 Kimi，由 Moonshot AI 提供的人工智能助手，你更擅长中文和英文的对话。"
-                        "你会为用户提供安全，有帮助，准确的回答。同时，你会拒绝一切涉及恐怖主义，"
-                        "种族歧视，黄色暴力等问题的回答。Moonshot AI 为专有名词，不可翻译成其他语言。"
-                    )
-                },
-                {
-                    "role": "user",
-                    "content": f"请分析以下密码的强度，并解释为什么它强或弱：\n\n密码: {password}"
-                },
-            ],
+            messages=messages,
             temperature=0.3,
         )
 
         analysis = completion.choices[0].message.content.strip()
+        analysis = analysis.replace('*', '')  # 去除所有 * 符号
         strength = extract_strength_from_analysis(analysis)
         explanation = extract_explanation_from_analysis(analysis)
+        print(explanation)
         return strength, explanation
 
     except Exception as e:
@@ -71,20 +96,23 @@ def evaluate_password_strength(password):
         return 0, "Error analyzing password."
 
 def extract_strength_from_analysis(analysis):
-    if "非常强" in analysis:
+    # 获取分析文本的第一段
+    first_paragraph = analysis.split('\n')[0]
+
+    if "非常强" in first_paragraph:
         return 5
-    elif "强" in analysis:
-        return 4
-    elif "中等" in analysis:
+    elif "中等" in first_paragraph:
         return 3
-    elif "弱" in analysis:
+    elif "很弱" in first_paragraph:
+        return 1
+    elif "弱" in first_paragraph:
         return 2
     else:
-        return 1
+        return 4
+
 
 def extract_explanation_from_analysis(analysis):
     return analysis
 
 if __name__ == '__main__':
-    context = ('.E:\大三\信安作品赛\代码\pass\cert.pem', 'E:\大三\信安作品赛\代码\pass\key.pem')  # 替换成你的证书和密钥文件路径
-    app.run(debug=True, ssl_context=context)
+    app.run(debug=True)
