@@ -1,7 +1,8 @@
-from flask import request, Flask, render_template, jsonify
+from flask import request, Flask, render_template, jsonify, redirect
 from flask_sslify import SSLify
 import sys
 from openai import OpenAI
+import ssl
 
 # 请替换成你的OpenAI API密钥
 api_key = "sk-Z6ttNnGzWksu7LYIOVVNuvXi3GqD5g6rykmK7NAn7ZcqTP7Q"
@@ -18,11 +19,19 @@ if sys.getdefaultencoding() != 'utf-8':
     sys.setdefaultencoding('utf-8')
 
 app = Flask(__name__)
-# sslify = SSLify(app)
+sslify = SSLify(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
+# 强制使用HTTPS
+@app.before_request
+def force_https():
+    if not request.is_secure:
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
+
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -115,4 +124,6 @@ def extract_explanation_from_analysis(analysis):
     return analysis
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    # context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, check_hostname=False)
+    app.run(debug=True, ssl_context=('newKey/cert.pem', 'newKey/key.pem'))
