@@ -106,49 +106,6 @@ def submit():
 
     return jsonify(response)
 
-# def evaluate_password_strength(password, name, email, phone, birthday):
-#     try:
-#         messages = [
-#             {
-#                 "role": "system",
-#                 "content": (
-#                     "你是 Kimi，由 Moonshot AI 提供的人工智能助手，你更擅长中文和英文的对话。"
-#                     "你会为用户提供安全，有帮助，准确的回答。同时，你会拒绝一切涉及恐怖主义，"
-#                     "种族歧视，黄色暴力等问题的回答。Moonshot AI 为专有名词，不可翻译成其他语言。"
-#                 )
-#             },
-#             {
-#                 "role": "user",
-#                 "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），并解释为什么它强或弱：\n\n密码: {password}"
-#             },
-#         ]
-
-#         if name or email or phone or birthday:
-#             additional_info = (
-#                 f"\n\n附加信息：\n姓名: {name}\n电子邮件: {email}\n电话: {phone}\n生日: {birthday}"
-#             )
-#             messages.append({
-#                 "role": "user",
-#                 "content": additional_info
-#             })
-
-#         completion = client.chat.completions.create(
-#             model="moonshot-v1-8k",
-#             messages=messages,
-#             temperature=0.3,
-#         )
-
-#         analysis = completion.choices[0].message.content.strip()
-#         analysis = analysis.replace('*', '')  # 去除所有 * 符号
-#         strength = extract_strength_from_analysis(analysis)
-#         explanation = extract_explanation_from_analysis(analysis)
-#         print(explanation)
-#         return strength, explanation
-
-#     except Exception as e:
-#         print(f"Error analyzing password: {str(e)}")
-#         return 0, "Error analyzing password."
-
 def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_email, encrypted_phone, encrypted_birthday):
     try:
         # 解密文本信息并使用 base64 解码
