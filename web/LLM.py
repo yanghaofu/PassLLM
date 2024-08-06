@@ -29,28 +29,25 @@ if sys.getdefaultencoding() != 'utf-8':
 
 app = Flask(__name__)
 
-# 生成SM2公私钥对
-def generate_sm2_keypair():
-    private_key = ec.generate_private_key(ec.SECP256R1())
-    public_key = private_key.public_key()
-    return private_key, public_key
+# 生成 ECC 密钥对
+private_key = ec.generate_private_key(ec.SECP256R1())
+public_key = private_key.public_key()
 
-private_key, public_key = generate_sm2_keypair()
-
-# 导出私钥和公钥为PEM格式
+# 导出私钥
 private_key_pem = private_key.private_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PrivateFormat.PKCS8,
     encryption_algorithm=serialization.NoEncryption()
 ).decode('utf-8')
 
+# 导出公钥
 public_key_pem = public_key.public_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PublicFormat.SubjectPublicKeyInfo
 ).decode('utf-8')
 
-print("Private Key:", private_key_pem)
-print("Public Key:", public_key_pem)
+print("Private Key PEM:", private_key_pem)
+print("Public Key PEM:", public_key_pem)
 
 # # 初始化SM2加解密对象
 # sm2_crypt = sm2.CryptSM2(public_key=public_key, private_key=private_key)
