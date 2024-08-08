@@ -16,59 +16,37 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    # 获取表单数据
-    data = request.json
-
-    # 使用 .get() 方法从 JSON 数据中获取每个字段，如果字段不存在则默认为 None
-    username = data.get('username')
-    email = data.get('email')
-    birthday = data.get('birthday')  # 注意：这里假设字段名是 'birthday' 而不是 'brithday'
+    data = request.get_json()
     password = data.get('password')
+    name = data.get('name')
+    email = data.get('email')
+    phone = data.get('phone')
+    birthday = data.get('birthday')
 
-    print("\033[95m[system] " + "\033[0m插件连接成功，等到评估指令…………" + "\033[0m\n")
+    # 这里可以添加你的密码强度评估逻辑
+    # 这里只是一个示例返回
+    strength = evaluate_password_strength(password)
+    explanation = "这是一个密码强度解释的示例。"
 
-    # 检查口令强度
-    strength, explanation = check_password_strength(password)
+    response = {
+        "strength": strength,
+        "explanation": explanation
+    }
+    return jsonify(response)
 
-    # 返回密码强度和解释信息
-    return jsonify({
-        'message': 'Password strength evaluated',
-        'strength': strength,
-        'explanation': explanation
-    })
-
-def check_password_strength(password):
-    # 构造API请求消息
-    messages = [
-        {"role": "system", "content": "评估以下口令的强度："},
-        {"role": "user", "content": password}
-    ]
-
-    # 调用OpenAI API
-    completion = client.chat.completions.create(
-        model="moonshot-v1-8k",
-        messages=messages,
-        temperature=0.3,
-    )
-
-    # 直接访问ChatCompletionMessage对象的content属性
-    response_message = completion.choices[0].message.content
-
-    print("\033[95m[system] " + "\033[0m开始解密……" + "\033[0m\n")
-
-    print("\033[95m[system] " + "\033[0m通过SM4解密口令为：password123!     进入评估系统……" + "\033[0m\n")
-
-    print("\033[95m[system] " + "\033[0mPssLLM评估结束！" + "\033[0m\n")
-
-    # 根据OpenAI的响应来确定密码强度和解释
-    # 这里需要根据实际返回的内容来编写逻辑，以下是一个示例
-    if "强" in response_message:  # 假设模型返回包含“强”字表示密码强
-        strength = 5
-
+def evaluate_password_strength(password):
+    # 这是一个简单的示例函数，可以根据你的实际需求进行修改
+    length = len(password)
+    if length >= 12:
+        return 5
+    elif length >= 10:
+        return 4
+    elif length >= 8:
+        return 3
+    elif length >= 6:
+        return 2
     else:
-        strength = 1
-
-    return strength, response_message
+        return 1
 
 
 if __name__ == '__main__':

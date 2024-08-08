@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from torch import cosine_similarity
 
+
 def calculate_scee_accuracy(expert_explanations, model_explanations, threshold=0.80):
     """
     计算大模型生成的解释与专家解释之间的语义契合度准确率。

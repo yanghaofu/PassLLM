@@ -329,217 +329,172 @@
 
 <body>
   <div class="container right-panel-active">
-    <!-- <div>hhhhhh</div> -->
-    <!-- <div class = "left-block"> -->
-    <!-- Sign Up -->
-      <div class="container__form container--signup">
+    <div class="container__form container--signup">
         <div class="mylogo" style="display: inline-block;"></div>
         <div class="headline1" style="display: inline-block;"><b>PassLLM</b></div>
         <div class="headline2" style="display: inline-block;">一个基于LLM的口令强度评价与解释器</div>
         <form action="#" class="form" id="form1">
-          <h2 class="form__title">
-          </h2>
-          <div style="height: 80px;"></div>
-          <span>在下方输入您的口令</span>
-          <!-- <input type="text" name="username" id="username" placeholder="User" class="input" />
-          <input type="email" name="email" placeholder="Email" class="input" />
-          <input type="brithday" name="brithday" id="password" placeholder="Brithday" class="input" /> -->
-          <input type="password" name="password" placeholder="Password" class="input" />
-          <!-- <button class= "btn-info"style="margin-left: 49%;">提供更多信息</button> -->
-          <!-- <div style="width: 50px;background: url('../static/img/header.png');">hhhh</div> -->
-          <button class="btn" onclick="submitForm('register')" id="testtest">Submit</button>
+            <h2 class="form__title"></h2>
+            <div style="height: 80px;"></div>
+            <span>在下方输入您的口令</span>
+            <input type="password" name="password" id="password" placeholder="Password" class="input" />
+            <button class="btn" onclick="event.preventDefault(); submitForm()" id="testtest">Submit</button>
         </form>
-      </div>
-    <!-- </div> -->
+    </div>
 
-
-            <!-- 模态框 -->
+    <!-- 模态框 -->
     <div id="myModal" class="modal">
       <div class="modal-content" style="background-color:cadetblue;">
-        <!-- <div class="modal-content" style="background:url('../static/img/test3.png');background-size: cover;"> -->
-
           <span class="close">&times;</span>
           <div id="modal-content-container">
-              <!-- 初始内容：确认是否输入个人信息 -->
-              <!-- <h2>提供更多自己的信息？</h2> -->
-
               <button id="yes-button">是</button>
               <button id="no-button">否</button>
           </div>
       </div>
   </div>
 
-
       <div class="right-box">
       <h3 style="font-size: 1.5em; color: #333; font-weight: bold;">口令强度评判结果：</h3>
       <div style="height: 50px;"></div>
-      <!-- <h style="font-size: 50px;position:absolute;right: 250px;top:55px;color:slategrey">较弱</h> -->
       <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; position: relative;">
-       
-        <!-- 强度条 -->
-        <div class="password-strength" style="height: 40px;  transition: width 0.3s ease; position: absolute; top: 0; left: 0;
-        "></div>
-        <!-- 强度数值，绝对定位在强度条上方 -->
+        <div class="password-strength" style="height: 40px;  transition: width 0.3s ease; position: absolute; top: 0; left: 0;"></div>
         <div class="strength-value" style="display: inline-block;position: absolute; top: 5px; left: 5px; color: white; font-weight: bold; font-size: 20px;">
           <div style="color: #0367a6;">0/5</div>
         </div>
       </div>
       <div style="display: inline-block;position: absolute;right: 80px;font-size: 18px;top: 140px;font-family:'Times New Roman', Times, serif;">强度等级</div>
-
-      <!-- 密码强度解释文本，增加了高度和行数 -->
-      <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; height: 165px; resize: none;
-      "></textarea>
+      <textarea readonly id="password-explanation" class="input password-explanation" placeholder="口令强度解释将显示在这里..." style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; height: 165px; resize: none;"></textarea>
     </div></div>
 
-
-
     <script>
-      
-                // 获取模态框
-                var modal = document.getElementById('myModal');
+        var modal = document.getElementById('myModal');
+        var btn = document.getElementById('testtest');
+        var span = document.getElementsByClassName('close')[0];
+        var contentContainer = document.getElementById('modal-content-container');
 
-                // 获取按钮
-                var btn = document.getElementById('testtest');
+        btn.onclick = function() {
+            modal.style.display = 'block';
+            showConfirmation();
+        }
 
-                // 获取 <span> 元素，用于关闭模态框
-                var span = document.getElementsByClassName('close')[0];
+        function showConfirmation() {
+            contentContainer.innerHTML = `
+                <h2>提供更多信息？</h2>
+                <h4>（这将有助于更全面地评估您的口令）</h4>
+                <button id="no-button">不了，谢谢</button>
+                <button id="yes-button">我愿意提供更多信息</button>
+            `;
 
-                // 获取模态框内容容器
-                var contentContainer = document.getElementById('modal-content-container');
+            document.getElementById('yes-button').onclick = showForm;
+            document.getElementById('no-button').onclick = function() {
+                modal.style.display = 'none';
+                submitForm();
+            }
+        }
 
-                // 点击按钮打开确认框
-                btn.onclick = function() {
-                    modal.style.display = 'block';
-                    showConfirmation();
-                }
+        function showForm() {
+            contentContainer.innerHTML = `
+                <h2>输入个人信息</h2>
+                <form id="additional-info-form">
+                    <label for="name">姓名:</label><br>
+                    <input type="text" id="name" name="name"><br><br>
+                    <label for="email">电子邮件:</label><br>
+                    <input type="email" id="email" name="email"><br><br>
+                    <label for="phone">电话:</label><br>
+                    <input type="tel" id="phone" name="phone"><br><br>
+                    <label for="birthday">生日:</label><br>
+                    <input type="date" id="birthday" name="birthday"><br><br>
+                    <button type="button" onclick="submitFormWithAdditionalInfo()">提交</button>
+                </form>
+            `;
+        }
 
-                // 显示确认框内容
-                function showConfirmation() {
-                    contentContainer.innerHTML = `
-                        <h2>提供更多信息？</h2>
-                        <h4>（这将有助于更全面地评估您的口令）</h4>
-                        <button id="no-button">不了，谢谢</button>
-                        <button id="yes-button">我愿意提供更多信息</button>
-                    `;
+        function submitForm() {
+            const passwordInput = document.getElementById('password');
+            const password = passwordInput.value;
 
-                    // 添加事件监听器
-                    document.getElementById('yes-button').onclick = showForm;
-                    document.getElementById('no-button').onclick = function() {
-                        modal.style.display = 'none';
-                    }
-                }
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateResults(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
 
-                // 显示表单内容
-                function showForm() {
-                    contentContainer.innerHTML = `
-                        <h2>输入个人信息</h2>
-                        <form>
-                            <label for="name">姓名:</label><br>
-                            <input type="text" id="name" name="name"><br><br>
-                            <label for="email">电子邮件:</label><br>
-                            <input type="email" id="email" name="email"><br><br>
-                            <label for="phone">电话:</label><br>
-                            <input type="tel" id="phone" name="phone"><br><br>
-                            <label for="phone">生日:</label><br>
-                            <input type="tel" id="phone" name="phone"><br><br>
-                            <input type="submit" value="提交">
-                        </form>                  
-                    `;
-                }
+        function submitFormWithAdditionalInfo() {
+            const passwordInput = document.getElementById('password');
+            const password = passwordInput.value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const birthday = document.getElementById('birthday').value;
 
-                // 点击 <span> 元素关闭模态框
-                span.onclick = function() {
-                    modal.style.display = 'none';
-                }
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    password: password,
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    birthday: birthday
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                modal.style.display = 'none';
+                updateResults(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
 
-                // 在用户点击模态框内容之外的地方时关闭模态框
-                window.onclick = function(event) {
-                    if (event.target == modal) {
-                        modal.style.display = 'none';
-                    }
-                }
+        function updateResults(data) {
+            const passwordStrength = document.querySelector('.password-strength');
+            const passwordExplanation = document.getElementById('password-explanation');
+            const strengthPercentage = parseInt(data.strength);
+            const widthPercentage = (strengthPercentage / 5) * 100;
+            passwordStrength.style.width = widthPercentage + '%';
+            passwordExplanation.value = data.explanation;
 
+            if (strengthPercentage >= 4) {
+                passwordStrength.style.backgroundColor = '#4caf50';
+                passwordExplanation.style.borderColor = '#4caf50';
+            } else if (strengthPercentage >= 3) {
+                passwordStrength.style.backgroundColor = '#ffeb3b';
+                passwordExplanation.style.borderColor = '#ffeb3b';
+            } else if (strengthPercentage >= 2) {
+                passwordStrength.style.backgroundColor = '#ff9800';
+                passwordExplanation.style.borderColor = '#ff9800';
+            } else if (strengthPercentage >= 1) {
+                passwordStrength.style.backgroundColor = '#ff5722';
+                passwordExplanation.style.borderColor = '#ff5722';
+            } else {
+                passwordStrength.style.backgroundColor = '#f44336';
+                passwordExplanation.style.borderColor = '#f44336';
+            }
+        }
 
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
-<script>
-  // 假设这是在用户提交表单时触发的函数
-  function submitForm(action) {
-    // 弹窗处理
-    // alert('这是一个弹框！');
-
-
-
-
-
-    // 获取密码输入框的值
-    const passwordInput = action === 'login' ? document.getElementById('password_sign') : document.getElementById('password');
-    const password = passwordInput.value;
-
-    // 发送密码到后端进行评估
-    fetch('/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ password: password })
-    })
-    .then(response => response.json())
-     .then(data => {
-      // 使用从后端接收的数据来更新页面
-      const passwordStrength = document.querySelector('.password-strength');
-      const passwordExplanation = document.getElementById('password-explanation');
-
-      // 根据返回的密码强度数值设置进度条的宽度百分比
-      const strengthPercentage = parseInt(data.strength); // 将字符串转换为整数
-      const widthPercentage = (strengthPercentage / 5) * 100; // 转换成百分比
-      passwordStrength.style.width = widthPercentage + '%'; // 设置宽度百分比
-
-      // 显示解释文本
-      passwordExplanation.value = data.explanation;
-
-      // 根据密码强度设置文本区域和进度条的颜色
-      if (strengthPercentage >= 4) { // 如果强度是4或5
-        passwordStrength.style.backgroundColor = '#4caf50'; // 绿色
-        passwordExplanation.style.borderColor = '#4caf50';
-      } else if (strengthPercentage >= 3) { // 如果强度是3
-        passwordStrength.style.backgroundColor = '#ffeb3b'; // 黄色
-        passwordExplanation.style.borderColor = '#ffeb3b';
-      } else if (strengthPercentage >= 2) { // 如果强度是2
-        passwordStrength.style.backgroundColor = '#ff9800'; // 橙色
-        passwordExplanation.style.borderColor = '#ff9800';
-      } else if (strengthPercentage >= 1) { // 如果强度是1
-        passwordStrength.style.backgroundColor = '#ff5722'; // 较深的橙色
-        passwordExplanation.style.borderColor = '#ff5722';
-      } else { // 如果强度小于1（这在1-5的范围内不应该发生）
-        passwordStrength.style.backgroundColor = '#f44336'; // 红色
-        passwordExplanation.style.borderColor = '#f44336';
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-  }
-</script>
-
-  <script>
-    const signInBtn = document.getElementById("signIn");
-    const signUpBtn = document.getElementById("signUp");
-    const fistForm = document.getElementById("form1");
-    const secondForm = document.getElementById("form2");
-    const container = document.querySelector(".container");
-
-    signInBtn.addEventListener("click", () => {
-      container.classList.remove("right-panel-active");
-    });
-
-    signUpBtn.addEventListener("click", () => {
-      container.classList.add("right-panel-active");
-    });
-
-    fistForm.addEventListener("submit", (e) => e.preventDefault());
-    secondForm.addEventListener("submit", (e) => e.preventDefault());
-
-  </script>
 </body>
-
 </html>
