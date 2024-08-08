@@ -175,7 +175,7 @@ def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_ema
             },
             {
                 "role": "user",
-                "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），三条左右的评级原因：\n\n密码: {password}"
+                "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），三条左右主要的评级原因：\n\n密码: {password}"
             },
         ]
 
