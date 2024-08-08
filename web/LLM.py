@@ -1,9 +1,10 @@
 import base64
 
-from flask import request, Flask, render_template, jsonify
+from flask import request, Flask, render_template, jsonify, redirect
 from flask_sslify import SSLify
 import sys
 from openai import OpenAI
+import ssl
 from gmssl import sm2, sm3, sm4
 from sqlalchemy import func
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -13,8 +14,6 @@ from cryptography.hazmat.primitives import hashes
 
 # 请替换成你的OpenAI API密钥
 api_key = "sk-Z6ttNnGzWksu7LYIOVVNuvXi3GqD5g6rykmK7NAn7ZcqTP7Q"
-
-# 生成SM2公私钥对
 
 client = OpenAI(
     api_key=api_key,
@@ -28,6 +27,7 @@ if sys.getdefaultencoding() != 'utf-8':
     sys.setdefaultencoding('utf-8')
 
 app = Flask(__name__)
+sslify = SSLify(app)
 
 # 生成 ECC 密钥对
 private_key = ec.generate_private_key(ec.SECP256R1())
@@ -55,6 +55,14 @@ print("Public Key PEM:", public_key_pem)
 def index():
     return render_template('index.html')
 
+# 强制使用HTTPS
+@app.before_request
+def force_https():
+    if not request.is_secure:
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
+
+
 @app.route('/submit', methods=['POST'])
 def submit():
     data = request.get_json()
@@ -62,12 +70,14 @@ def submit():
 
     if not password:
         return jsonify({"error": "Password is required"}), 400
+    print(password)
 
     name = data.get('name', '')
     email = data.get('email', '')
     phone = data.get('phone', '')
     birthday = data.get('birthday', '')
 
+    # print(name, email, phone, birthday)
     # 对文本信息进行加密并使用 base64 编码
     encrypted_password = base64.b64encode(password.encode()).decode('utf-8')
     encrypted_name = base64.b64encode(name.encode()).decode('utf-8') if name else ''
@@ -81,6 +91,10 @@ def submit():
     print(f"Encrypted phone: {encrypted_phone}")
     print(f"Encrypted birthday: {encrypted_birthday}")
 
+    # print("前端加密后的结果：",name, email, phone, birthday)
+
+
+    # strength, explanation = evaluate_password_strength(password, name, email, phone, birthday)
     strength, explanation = evaluate_password_strength(
         encrypted_password, encrypted_name, encrypted_email, encrypted_phone, encrypted_birthday
     )
@@ -89,6 +103,8 @@ def submit():
         "strength": strength,
         "explanation": explanation
     }
+
+    print(strength)
 
     return jsonify(response)
 
@@ -148,7 +164,6 @@ def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_ema
     except Exception as e:
         print(f"Error analyzing password: {str(e)}")
         return "错误", "分析密码时出错。"
-
 def extract_strength_from_analysis(analysis):
     # 获取分析文本的第一段
     first_paragraph = analysis.split('\n')[0]
@@ -169,4 +184,6 @@ def extract_explanation_from_analysis(analysis):
     return analysis
 
 if __name__ == '__main__':
-    app.run(debug=True, port=6006)
+    # app.run(debug=True)
+    # context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, check_hostname=False)
+    app.run(debug=False, ssl_context=('newKey/cert.pem', 'newKey/key.pem'))
