@@ -91,6 +91,8 @@ def submit():
     print(f"Encrypted phone: {encrypted_phone}")
     print(f"Encrypted birthday: {encrypted_birthday}") 
 
+    # print("前端加密后的结果：",name, email, phone, birthday)
+
 
     # strength, explanation = evaluate_password_strength(password, name, email, phone, birthday)
     strength, explanation = evaluate_password_strength(
@@ -184,4 +186,4 @@ def extract_explanation_from_analysis(analysis):
 if __name__ == '__main__':
     # app.run(debug=True)
     # context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, check_hostname=False)
-    app.run(debug=True, ssl_context=('newKey/cert.pem', 'newKey/key.pem'))
+    app.run(debug=False, ssl_context=('newKey/cert.pem', 'newKey/key.pem'))
