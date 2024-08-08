@@ -366,7 +366,7 @@
 
     <div class="right-box">
       <h3 style="font-size: 1.5em; color: #333; font-weight: bold;">口令强度评判结果：</h3>
-      <div style="height: 50px;"></div>
+      <div style="height: 50px;" id="myStrength"></div>
       <div class="password-strength-box" style="border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; position: relative;">
         <div class="password-strength" style="height: 40px; transition: width 0.3s ease; position: absolute; top: 0; left: 0;"></div>
         <div class="strength-value" style="display: inline-block;position: absolute; top: 5px; left: 5px; color: white; font-weight: bold; font-size: 20px;">
@@ -571,22 +571,33 @@
         passwordStrength.style.width = widthPercentage + '%';
         passwordExplanation.value = data.explanation;
         strengthDisplay.textContent = `${strengthPercentage}/5`;
+        const myStrength = document.getElementById('myStrength');
 
         if (strengthPercentage > 4) {
           passwordStrength.style.backgroundColor = '#4caf50';
           passwordExplanation.style.borderColor = '#4caf50';
+          myStrength.innerText = "非常强";
+          myStrength.style.color = "#4caf50";
         } else if (strengthPercentage > 3) {
           passwordStrength.style.backgroundColor = '#ffeb3b';
           passwordExplanation.style.borderColor = '#ffeb3b';
+          myStrength.innerText = "强";
+          myStrength.style.color = "#ffeb3b";
         } else if (strengthPercentage > 2) {
           passwordStrength.style.backgroundColor = '#ff9800';
           passwordExplanation.style.borderColor = '#ff9800';
+          myStrength.innerText = "中等";
+          myStrength.style.color = "#ff9800";
         } else if (strengthPercentage > 1) {
           passwordStrength.style.backgroundColor = '#ff5722';
           passwordExplanation.style.borderColor = '#ff5722';
+          myStrength.innerText = "弱";
+          myStrength.style.color = "#ff5722";
         } else {
           passwordStrength.style.backgroundColor = '#f44336';
           passwordExplanation.style.borderColor = '#f44336';
+          myStrength.innerText = "很弱";
+          myStrength.style.color = "#f44336";
         }
       }
     });

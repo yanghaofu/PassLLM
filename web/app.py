@@ -151,4 +151,4 @@ def extract_explanation_from_analysis(analysis):
     return analysis
 
 if __name__ == '__main__':
-    app.run(debug=True, port=6006)
+    app.run(debug=False, port=5001)

@@ -1,5 +1,5 @@
 import base64
-import requests
+
 from flask import request, Flask, render_template, jsonify, redirect
 from flask_sslify import SSLify
 import sys
@@ -11,9 +11,6 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives import hashes
-
-# 改这里调模型
-model_num = 0 # 0是kimi,1是llma
 
 # 请替换成你的OpenAI API密钥
 api_key = "sk-Z6ttNnGzWksu7LYIOVVNuvXi3GqD5g6rykmK7NAn7ZcqTP7Q"
@@ -116,12 +113,9 @@ def submit():
 
     # print("前端加密后的结果：",name, email, phone, birthday)
 
-    if model_num == 0:
-        func_evaluate = evaluate_password_strength
-    else:
-        func_evaluate = evaluate_password_model
+
     # strength, explanation = evaluate_password_strength(password, name, email, phone, birthday)
-    strength, explanation = func_evaluate(
+    strength, explanation = evaluate_password_strength(
         encrypted_password, encrypted_name, encrypted_email, encrypted_phone, encrypted_birthday
     )
 
@@ -193,55 +187,6 @@ def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_ema
     except Exception as e:
         print(f"Error analyzing password: {str(e)}")
         return "错误", "分析密码时出错。"
-
-def evaluate_password_model(encrypted_password, encrypted_name, encrypted_email, encrypted_phone, encrypted_birthday):
-    try:
-        # sm2解密
-        password = sm2_decrypt(encrypted_password)
-        if encrypted_name!='':
-            name = sm2_decrypt(encrypted_name)
-            email = sm2_decrypt(encrypted_email)
-            phone = sm2_decrypt(encrypted_phone)
-            birthday = sm2_decrypt(encrypted_birthday)
-        else:
-            name = ''
-            email = ''
-            phone = ''
-            birthday = ''
-        print(f"Decrypted password: {password}")
-        print(f"Decrypted name: {name}")
-        print(f"Decrypted email: {email}")
-        print(f"Decrypted phone: {phone}")
-        print(f"Decrypted birthday: {birthday}")
-
-        url = 'http://127.0.0.1:6006/submit'
-        data = {
-            'password': password,
-            'name': name,
-            'email': email,
-            'phone': phone,
-            'birthday': birthday
-        }
-
-        response = requests.post(url, json=data)
-        print(response.status_code)
-        if response.status_code == 200:
-            try:
-                response_json = response.json()
-                analysis = response_json.get("analysis", "").replace('*', '')  # 去除所有 * 符号
-                strength = extract_strength_from_analysis(analysis)
-                explanation = extract_explanation_from_analysis(analysis)
-                print(explanation)
-                return strength, explanation
-            except ValueError as e:
-                print(f"Error parsing JSON response: {e}")
-        else:
-            return "错误", "服务器返回错误代码: {}".format(response.status_code)
-
-    except Exception as e:
-        print(f"Error analyzing password: {str(e)}")
-        return "错误", "分析密码时出错。"
-        
 def extract_strength_from_analysis(analysis):
     # 获取分析文本的第一段
     first_paragraph = analysis.split('\n')[0]
