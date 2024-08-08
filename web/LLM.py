@@ -168,17 +168,16 @@ def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_ema
 
         messages = [
             {
-            "role": "system",
-            "content": (
-            "你现在是一名口令领域的专家，你需要根据给定的口令以及可能附加的用户个人信息，可以从口令长度、字符种类、字符重复、语义信息、键盘模式、个人信息等多个角度分析口令的安全性。"
-            )
+                "role": "system",
+                "content": (
+                    "你现在是一名口令领域的专家，你需要根据给定的口令以及可能附加的用户个人信息，从多个角度分析口令的安全性。"
+                )
             },
             {
-            "role": "user",
-            # "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），并解释为什么它强或弱：\n\n密码: {password}"
-            "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），并给出四条以内的评级原因。\n\n密码: {password}"
+                "role": "user",
+                "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），三条左右的评级原因：\n\n密码: {password}"
             },
-            ]
+        ]
 
         if name or email or phone or birthday:
             additional_info = (
