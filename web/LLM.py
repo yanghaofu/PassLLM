@@ -1,15 +1,9 @@
 import base64
-
-from flask import request, Flask, render_template, jsonify
-from flask_sslify import SSLify
+from flask import request, Flask, render_template, jsonify, redirect
 import sys
 from openai import OpenAI
-from gmssl import sm2, sm3, sm4
-from sqlalchemy import func
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.kdf.hkdf import HKDF
-from cryptography.hazmat.primitives import hashes
 
 # 请替换成你的OpenAI API密钥
 api_key = "sk-Z6ttNnGzWksu7LYIOVVNuvXi3GqD5g6rykmK7NAn7ZcqTP7Q"
@@ -74,6 +68,12 @@ def submit():
     encrypted_email = base64.b64encode(email.encode()).decode('utf-8') if email else ''
     encrypted_phone = base64.b64encode(phone.encode()).decode('utf-8') if phone else ''
     encrypted_birthday = base64.b64encode(birthday.encode()).decode('utf-8') if birthday else ''
+
+    print(f"Encrypted password: {encrypted_password}")
+    print(f"Encrypted name: {encrypted_name}")
+    print(f"Encrypted email: {encrypted_email}")
+    print(f"Encrypted phone: {encrypted_phone}")
+    print(f"Encrypted birthday: {encrypted_birthday}")
 
     print(f"Encrypted password: {encrypted_password}")
     print(f"Encrypted name: {encrypted_name}")
@@ -148,7 +148,6 @@ def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_ema
     except Exception as e:
         print(f"Error analyzing password: {str(e)}")
         return "错误", "分析密码时出错。"
-
 def extract_strength_from_analysis(analysis):
     # 获取分析文本的第一段
     first_paragraph = analysis.split('\n')[0]
