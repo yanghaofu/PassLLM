@@ -6,6 +6,7 @@ LLM.py:和KIMI连接
 1. 在本机Powershell输入：
 ~~~ bash
 ssh -CNg -L 6006:127.0.0.1:6006 root@connect.yza1.seetacloud.com -p 52671
+"C:\Program Files\Git\usr\bin\ssh.exe" -CNg -L 6006:127.0.0.1:6006 root@connect.yza1.seetacloud.com -p 52671
 ~~~
 2. 输入密码：
 ~~~bash

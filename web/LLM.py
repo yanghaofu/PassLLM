@@ -49,8 +49,23 @@ public_key_pem = public_key.public_bytes(
 print("Private Key PEM:", private_key_pem)
 print("Public Key PEM:", public_key_pem)
 
-# # 初始化SM2加解密对象
+
+# 初始化SM2加解密对象
+# sm2的公私钥
+SM2_PRIVATE_KEY = '00B9AB0B828FF68872F21A837FC303668428DEA11DCD1B24429D0C99E24EED83D5'
+SM2_PUBLIC_KEY = 'B9C9A6E04E9C91F7BA880429273747D7EF5DDEB0BB2FF6317EB00BEF331A83081A6994B8993F3F5D6EADDDB81872266C87C018FB4162F5AF347B483E24620207'
 # sm2_crypt = sm2.CryptSM2(public_key=public_key, private_key=private_key)
+sm2_crypt = sm2.CryptSM2(public_key=SM2_PUBLIC_KEY, private_key=SM2_PRIVATE_KEY)
+
+# sm2加密函数
+def sm2_encrypt(info):
+    encode_info = sm2_crypt.encrypt(info.encode(encoding="utf-8"))
+    return encode_info
+# sm2解密函数
+def sm2_decrypt(info):
+    decode_info = sm2_crypt.decrypt(info).decode(encoding="utf-8")
+    return decode_info
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
@@ -77,13 +92,18 @@ def submit():
     phone = data.get('phone', '')
     birthday = data.get('birthday', '')
 
-    # print(name, email, phone, birthday)
-    # 对文本信息进行加密并使用 base64 编码
-    encrypted_password = base64.b64encode(password.encode()).decode('utf-8')
-    encrypted_name = base64.b64encode(name.encode()).decode('utf-8') if name else ''
-    encrypted_email = base64.b64encode(email.encode()).decode('utf-8') if email else ''
-    encrypted_phone = base64.b64encode(phone.encode()).decode('utf-8') if phone else ''
-    encrypted_birthday = base64.b64encode(birthday.encode()).decode('utf-8') if birthday else ''
+    # 使用sm2进行加密
+    encrypted_password = sm2_encrypt(password)
+    if name!='':
+        encrypted_name = sm2_encrypt(name)
+        encrypted_email = sm2_encrypt(email)
+        encrypted_phone = sm2_encrypt(phone)
+        encrypted_birthday = sm2_encrypt(birthday)
+    else:
+        encrypted_name = ''
+        encrypted_email = ''
+        encrypted_phone = ''
+        encrypted_birthday = ''
 
     print(f"Encrypted password: {encrypted_password}")
     print(f"Encrypted name: {encrypted_name}")
@@ -110,12 +130,18 @@ def submit():
 
 def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_email, encrypted_phone, encrypted_birthday):
     try:
-        # 解密文本信息并使用 base64 解码
-        password = base64.b64decode(encrypted_password.encode('utf-8')).decode('utf-8') if encrypted_password else ''
-        name = base64.b64decode(encrypted_name.encode('utf-8')).decode('utf-8') if encrypted_name else ''
-        email = base64.b64decode(encrypted_email.encode('utf-8')).decode('utf-8') if encrypted_email else ''
-        phone = base64.b64decode(encrypted_phone.encode('utf-8')).decode('utf-8') if encrypted_phone else ''
-        birthday = base64.b64decode(encrypted_birthday.encode('utf-8')).decode('utf-8') if encrypted_birthday else ''
+        # sm2解密
+        password = sm2_decrypt(encrypted_password)
+        if encrypted_name!='':
+            name = sm2_decrypt(encrypted_name)
+            email = sm2_decrypt(encrypted_email)
+            phone = sm2_decrypt(encrypted_phone)
+            birthday = sm2_decrypt(encrypted_birthday)
+        else:
+            name = ''
+            email = ''
+            phone = ''
+            birthday = ''
 
         print(f"Decrypted password: {password}")
         print(f"Decrypted name: {name}")
@@ -135,7 +161,8 @@ def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_ema
             },
             {
                 "role": "user",
-                "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），并解释为什么它强或弱：\n\n密码: {password}"
+                # "content": f"请直接给出下面密码的强度（非常强，强，中等，弱，很弱），并解释为什么它强或弱：\n\n密码: {password}"
+                "content": f"你现在是一名口令领域的专家，你需要根据给定的口令以及可能附加的用户个人信息，从口令长度、字符种类、字符重复、语义信息、键盘模式、个人信息等多个角度分析口令的安全性。请给出口令强度评级（1-5级），并列出三条左右的评级原因。\n\n用户口令：{password}。"
             },
         ]
 
