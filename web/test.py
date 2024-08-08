@@ -1,11 +1,14 @@
 import requests
 
-url = 'http://180.119.171.109:5000/predict'
-data = {'data': 'your input data'}
+url = 'http://127.0.0.1:6006/submit'
+data = {
+    'password': 123,
+    'name': 'nam12e',
+    'email': 'email',
+    'phone': 'phone',
+    'birthday': 'birthday'
+}
 
-try:
-    response = requests.post(url, json=data)
-    print("Status Code:", response.status_code)
-    print("Response Text:", response.text)
-except requests.exceptions.RequestException as e:
-    print(f"Request failed: {e}")
+response = requests.post(url, json=data)
+print(response.status_code)
+print(response.json())
