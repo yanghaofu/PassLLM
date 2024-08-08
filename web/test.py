@@ -1,10 +1,11 @@
-from gmssl import sm3, func
+import requests
 
-def sm3_hash(data):
-    data_bytes = data.encode('utf-8')
-    hash_value = sm3.sm3_hash(func.bytes_to_list(data_bytes))
-    return hash_value
+url = 'http://180.119.171.109:5000/predict'
+data = {'data': 'your input data'}
 
-data = "Hello, World!"
-hash_value = sm3_hash(data)
-print(f"SM3 hash of '{data}': {hash_value}")
+try:
+    response = requests.post(url, json=data)
+    print("Status Code:", response.status_code)
+    print("Response Text:", response.text)
+except requests.exceptions.RequestException as e:
+    print(f"Request failed: {e}")
