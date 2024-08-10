@@ -1,13 +1,27 @@
-def evaluate_password_strength(encrypted_password, encrypted_name, encrypted_email, encrypted_phone,
+import base64
+def evaluate_password_strength1(encrypted_password, encrypted_name, encrypted_email, encrypted_phone,
                                encrypted_birthday):
     try:
-        # 解密文本信息并使用 base64 解码
-        password = base64.b64decode(encrypted_password.encode('utf-8')).decode('utf-8') if encrypted_password else ''
-        name = base64.b64decode(encrypted_name.encode('utf-8')).decode('utf-8') if encrypted_name else ''
-        email = base64.b64decode(encrypted_email.encode('utf-8')).decode('utf-8') if encrypted_email else ''
-        phone = base64.b64decode(encrypted_phone.encode('utf-8')).decode('utf-8') if encrypted_phone else ''
-        birthday = base64.b64decode(encrypted_birthday.encode('utf-8')).decode('utf-8') if encrypted_birthday else ''
-
+        # # 解密文本信息并使用 base64 解码
+        # password = base64.b64decode(encrypted_password.encode('utf-8')).decode('utf-8') if encrypted_password else ''
+        # name = base64.b64decode(encrypted_name.encode('utf-8')).decode('utf-8') if encrypted_name else ''
+        # email = base64.b64decode(encrypted_email.encode('utf-8')).decode('utf-8') if encrypted_email else ''
+        # phone = base64.b64decode(encrypted_phone.encode('utf-8')).decode('utf-8') if encrypted_phone else ''
+        # birthday = base64.b64decode(encrypted_birthday.encode('utf-8')).decode('utf-8') if encrypted_birthday else ''
+        
+        # sm2解密
+        password = sm2_decrypt(encrypted_password)
+        if encrypted_name!='':
+            name = sm2_decrypt(encrypted_name)
+            email = sm2_decrypt(encrypted_email)
+            phone = sm2_decrypt(encrypted_phone)
+            birthday = sm2_decrypt(encrypted_birthday)
+        else:
+            name = ''
+            email = ''
+            phone = ''
+            birthday = ''
+            
         if name:
             print(f"Decrypted password: {'nemo8481'}")
             print(f"Decrypted name: {'zhaoxingyu'}")

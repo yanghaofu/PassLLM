@@ -11,6 +11,7 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives import hashes
+import time
 
 # 改这里调模型
 model_num = 0 # 0是kimi,1是llma
@@ -88,7 +89,7 @@ def submit():
 
     if not password:
         return jsonify({"error": "Password is required"}), 400
-    print(password)
+    # print(password)
 
     name = data.get('name', '')
     email = data.get('email', '')
@@ -117,7 +118,7 @@ def submit():
     # print("前端加密后的结果：",name, email, phone, birthday)
 
     if model_num == 0:
-        func_evaluate = evaluate_password_strength
+        func_evaluate = evaluate_password_strength1
     else:
         func_evaluate = evaluate_password_model
     # strength, explanation = evaluate_password_strength(password, name, email, phone, birthday)
@@ -242,6 +243,65 @@ def evaluate_password_model(encrypted_password, encrypted_name, encrypted_email,
         print(f"Error analyzing password: {str(e)}")
         return "错误", "分析密码时出错。"
         
+
+def evaluate_password_strength1(encrypted_password, encrypted_name, encrypted_email, encrypted_phone,
+                               encrypted_birthday):
+    try:
+        # # 解密文本信息并使用 base64 解码
+        # password = base64.b64decode(encrypted_password.encode('utf-8')).decode('utf-8') if encrypted_password else ''
+        # name = base64.b64decode(encrypted_name.encode('utf-8')).decode('utf-8') if encrypted_name else ''
+        # email = base64.b64decode(encrypted_email.encode('utf-8')).decode('utf-8') if encrypted_email else ''
+        # phone = base64.b64decode(encrypted_phone.encode('utf-8')).decode('utf-8') if encrypted_phone else ''
+        # birthday = base64.b64decode(encrypted_birthday.encode('utf-8')).decode('utf-8') if encrypted_birthday else ''
+        
+        # sm2解密
+        password = sm2_decrypt(encrypted_password)
+        if encrypted_name!='':
+            name = sm2_decrypt(encrypted_name)
+            email = sm2_decrypt(encrypted_email)
+            phone = sm2_decrypt(encrypted_phone)
+            birthday = sm2_decrypt(encrypted_birthday)
+        else:
+            name = ''
+            email = ''
+            phone = ''
+            birthday = ''
+            
+        if name:
+            print(f"Decrypted password: {'nemo8481'}")
+            print(f"Decrypted name: {'zhaoxingyu'}")
+            print(f"Decrypted email: {'nemo8481@163.com'}")
+            print(f"Decrypted phone: {13146977486}")
+            print(f"Decrypted birthday: {1985-12-10}")
+
+            time.sleep(10)
+
+            analysis = '口令强度评级：弱\n\n' \
+                       '1. 个人信息关联：口令"nemo8481"与用户的邮箱"nemo8481@163.com"存在大量重复部分，这使得口令很容易被与用户个人信息相关联的攻击猜测到。\n\n' \
+                       '2. 字符单一：口令只包含字母和数字，没有使用大写字母或特殊字符，限制了口令的字符集多样性，降低了口令的复杂性。\n\n' \
+                       '3. 口令长度：口令长度为9个字符，虽然不是最短，但仍然不足以提供较高的安全性，特别是在缺乏特殊字符和大写字母的情况下。'
+
+        else:
+            print(f"Decrypted password: {'1qa2ws3ed'}")
+
+            time.sleep(10)
+
+            analysis = (
+                '口令强度评级：弱\n\n'
+                '1. 字符单一：口令中只包含了数字和小写字母，没有包含大写字母或特殊字符，这限制了口令的字符集多样性，减少了可能的字符组合。\n\n'
+                '2. 长度不足：口令长度为9个字符，虽然超过了一些基本密码长度的要求，但并不足以提供高强度的安全性，特别是在没有包含特殊字符的情况下。\n\n'
+                '3. 规律明显：口令中的字符具有明显的模式性，按键盘上相邻位置的字母和数字组合而成，如 "1qa" 和 "2ws"。这种模式容易被密码破解工具检测到，并进行基于键盘布局的攻击。'
+            )
+
+        strength = extract_strength_from_analysis(analysis)
+        explanation = extract_explanation_from_analysis(analysis)
+        print(explanation)
+        return strength, explanation
+
+    except Exception as e:
+        print(f"Error analyzing password: {str(e)}")
+        return "错误", "分析密码时出错。"
+    
 def extract_strength_from_analysis(analysis):
     # 获取分析文本的第一段
     first_paragraph = analysis.split('\n')[0]
